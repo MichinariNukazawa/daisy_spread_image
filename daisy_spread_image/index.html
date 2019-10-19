@@ -10,8 +10,8 @@
 	<body>
 		<div id='edit-control' class='frame'>
 			document size
-			width:	<input id='editor-document_width' type='number' />px
-			height:	<input id='editor-document_height' type='number' />px
+			width:	<input id='editor-document_width' type='number' min="0" step="10" />px
+			height:	<input id='editor-document_height' type='number' min="0" step="10" />px
 		</div>
 		<div class='box-container'>
 			<div id='property-editor'>
@@ -32,7 +32,7 @@
 					</fieldset>
 					<fieldset class='frame'>
 						<legend>MagickCircle</legend>
-						Num:<input id='editor-magickcircle_num' type='number' />
+						Num:<input id='editor-magickcircle_num' type='number' min="0" step="1" />
 						<br>
 						<label for='editor-magickcircle_randomsize'>
 							<input id='editor-magickcircle_randomsize' type="checkbox"/>

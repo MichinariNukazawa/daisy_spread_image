@@ -4,11 +4,14 @@ const fs = require("fs");
 const path = require('path');
 const sprintf = require('sprintf-js').sprintf;
 let SVG = require('svg.js');
-
+const Renderer = require('./js/renderer').Renderer;
+const RenderingHandle = require('./js/renderer').RenderingHandle;
 /*
 const {app} = require('electron').remote;
 const sprintf = require('sprintf-js').sprintf;
 */
+
+let rendering_handle = null;
 
 
 
@@ -51,11 +54,13 @@ function read_curcle_filepaths(){
 	return read_curcle_filepaths_from_dirpath(dirpath);
 }
 
-function set_ui_generate_diagram(property){
+function set_ui_generate_diagram(diagram, property){
 	const fileex = require('./js/fileex');
 
 	let curcle_filepaths = read_curcle_filepaths();
 	console.log(curcle_filepaths);
+
+	/*
 
 	const elemId = 'canvas';
 	//const elemId = 'target-image';
@@ -63,22 +68,34 @@ function set_ui_generate_diagram(property){
 	svg.clear();
 	let diagram_group = svg.group().addClass('diagram_group');
 	diagram_group.scale(0.1, 0.1);
+*/
+
+	const dirpath = get_curcle_dirpath();
+	property.magickcircle_dirpath = dirpath;
 
 	for(let i = 0; i < property.magickcircle_num; i++){
-		const dirpath = get_curcle_dirpath();
-		const filepath = path.join(dirpath, curcle_filepaths[i]);
-		let circleimage_svg = fs.readFileSync(filepath, 'utf8');
-		let diagram_group_ = diagram_group.group().addClass('group__AA');
-		diagram_group_.svg(circleimage_svg)
-				//.move((i * 1000) - 500, (i * 1000) - 500)
-				.move((i * 1000 / 2), (i * 1000 / 1))
-				//.scale(1.0, 1.0)
-				.attr({
-					'opacity':	1.0,
-				});
+		let circle_subfilepath = curcle_filepaths[i];
+		let elem = {
+			"kind": "circle_svg",
+			"x": (i * 1000 / 2),
+			"y": (i * 1000 / 1),
+			"subfilepath": circle_subfilepath
+		};
+		diagram.diagram_elements.push(elem);
 
-		console.log(i, filepath);
+		console.log(i, circle_subfilepath);
 	}
+
+	Renderer.rerendering(rendering_handle, diagram, null, null, null);
+
+/*
+	Renderer.rerendering(
+		rendering_handle,
+		daisy.get_current_diagram(),
+		Doc.get_focus(daisy.get_current_doc()),
+		mouse_state,
+		tool.get_tool_kind());
+*/
 }
 
 window.addEventListener("load", function(){
@@ -92,7 +109,9 @@ window.addEventListener("load", function(){
 	const property = doc.diagram.property;
 	set_ui_from_property(property);
 
-	set_ui_generate_diagram(property);
+	rendering_handle = new RenderingHandle('canvas');
+
+	set_ui_generate_diagram(doc.diagram, property);
 
 	document.getElementById('thumbnail-frame').style.display = "none";
 	/*
