@@ -1,0 +1,130 @@
+@charset "utf-8";
+
+html, body{
+	margin: 0px;         /* 余白の削除 */
+	padding: 0px;        /* 余白の削除 */
+	width:100%;
+	height:99%;
+
+	background: rgba(245, 245, 245, 1);
+}
+
+div{
+	margin: 0px;
+	padding: 0px;
+}
+
+input{
+	font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+	vertical-align: bottom;
+}
+
+input[type="number"]{
+	text-align: right;
+	width: 70px;
+	direction: rtl;
+}
+
+input[type="checkbox"][disabled] + span{
+	color: #707070;
+}
+
+#editor__background-transparent-view{
+	font-size: 75%;
+}
+
+#edit-control{
+	text-align: right;
+	font-size:120%;
+}
+
+.box-container{
+	display: flex;
+}
+
+.frame{
+	margin: 2px;
+	padding: 1px;
+	border: solid 1px rgba(0, 0, 0, 0.5);
+	border-radius: 2px;
+}
+
+table th{
+	vertical-align: middle;
+	text-align: left;
+	overflow: visible;
+	position: relative;
+	font-weight: normal;
+}
+
+#tool{
+	font-size:120%;
+}
+
+#tool button{
+	margin: 2px;
+	padding: 0px;
+}
+#tool object{
+	margin: 0px;
+	padding: 0px;
+	border: solid 1px rgba(0, 0, 0, 0.5);
+	pointer-events: none;	/* click event */
+}
+
+#tool .tool-selected{
+	background-color: rgba(0, 128, 255, 0.3);
+}
+
+#tool button + .hover_message{
+	display: none;
+
+	position: absolute;
+	margin: 10px 0 1.5em 15px;
+	padding: 4px 5px;
+	min-width: 120px;
+	max-width: 100%;
+	background: #a0d0ff;
+	border-radius: 4px;
+	z-index: 5;
+}
+
+#tool button:hover + .hover_message{
+	display: block;
+}
+
+#property-editor{
+	font-size:120%;
+}
+
+#canvas-header{
+	padding: 5px;
+	font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+	font-size: 75%;
+}
+
+#editor__element-text{
+	resize: vertical;
+}
+
+#thumbnail-container{
+	border: solid 1px rgba(0, 0, 0, 0.3);
+	background: white;
+}
+
+#canvas-container{
+	border: solid 1px rgba(0, 0, 0, 0.3);
+	background: white;
+	position:absolute; top:54px; bottom:4px; left:320px; right:4px;
+	overflow:	auto;
+	cursor: default;
+}
+
+#canvas{
+	min-height: 90%;
+}
+
+#nodocument-message{
+	padding: 5px;
+}
+

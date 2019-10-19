@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>daisy spread image</title>
+
+		<script type="text/javascript" src="./js/index.js"></script>
+		<LINK href="css/style.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div id='edit-control' class='frame'>
+			document size
+			width:	<input id='editor-document_width' type='number' />px
+			height:	<input id='editor-document_height' type='number' />px
+		</div>
+		<div class='box-container'>
+			<div id='property-editor'>
+				<fieldset id="thumbnail-frame" class='frame'>
+					<legend>Thumbnail</legend>
+					<div id="thumbnail-container"><div id="thumbnail"></div></div>
+				</fieldset>
+				<fieldset id="editor" class='frame'>
+					<legend>Editor</legend>
+					<fieldset class='frame'>
+						<legend>RandomSeed</legend>
+						<button id="generate-randomseed">
+							generate RandomSeed
+						</button>
+						<br>
+						RandomSeedValue
+						<input id='editor-randomseed_value' type="text"></input>
+					</fieldset>
+					<fieldset class='frame'>
+						<legend>MagickCircle</legend>
+						Num:<input id='editor-magickcircle_num' type='number' />
+						<br>
+						<label for='editor-magickcircle_randomsize'>
+							<input id='editor-magickcircle_randomsize' type="checkbox"/>
+							<span>RandomSize</span>
+						</label>
+						<br>
+						<label for='editor-magickcircle_randomrotate'>
+							<input id='editor-magickcircle_randomrotate' type="checkbox"/>
+							<span>RandomRotate</span>
+						</label>
+						<br>
+						Transparent:
+						<input id='editor-magickcircle_transparent' style='width:70%;'
+						 type="range" min="0" max="100" step="10" value="0">
+						<span id='editor-magickcircle_transparent-view'>(---%)</span>
+						</input>
+					</fieldset>
+
+				</fieldset>
+			</div>
+			<div id='canvas-div'>
+				<div id='canvas-header'>
+					<span id="history_info">(-)</span>
+					<span id="mouse_position">(-,-)</span>
+					<span id="focus_info">[]</span>
+				</div>
+				<div id="canvas-container">
+					<div id="canvas">
+						<!--
+						<object id="target-image" data="image.svg" type="image/svg+xml" width="320"></object>
+						-->
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

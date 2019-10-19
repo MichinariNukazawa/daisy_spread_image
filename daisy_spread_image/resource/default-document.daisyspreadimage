@@ -1,0 +1,20 @@
+{
+	"editor_info": {
+		"application_name": "daisy_spread_image",
+		"version": "none"
+	},
+	"filetype": "daisy spread image",
+	"diagram": {
+		"property": {
+			"document_width": 500,
+			"document_height": 681,
+			"randomseed_value": 128,
+			"magickcircle_num": 5,
+			"magickcircle_randomsize": true,
+			"magickcircle_randomrotate": true,
+			"magickcircle_transparent": 30
+		},
+		"document_elements": [
+		]
+	}
+}
