@@ -132,6 +132,12 @@ function set_ui_generate_diagram(diagram){
 
 	let random = new Random(parseInt(diagram.property.randomseed_value, 10));
 
+	// @todo 拡大縮小とデフォルト画像サイズをハードコートしている
+	const position_range = {
+		"min": {"x": 0, "y": 0},
+		"max": {"x": ((diagram.property.document_width / 0.1) - 1000), "y": ((diagram.property.document_height / 0.1) - 1000)},
+	};
+
 	diagram.diagram_elements = [];
 	for(let i = 0; i < property.magickcircle_num; i++){
 		const ix = random.range(0, curcle_filepaths.length - 1);
@@ -139,8 +145,8 @@ function set_ui_generate_diagram(diagram){
 		let circle_subfilepath = curcle_filepaths[ix];
 		let elem = {
 			"kind": "circle_svg",
-			"x": (i * 1000 / 2),
-			"y": (i * 1000 / 1),
+			"x": random.range(position_range.min.x, position_range.max.x),
+			"y": random.range(position_range.min.y, position_range.max.y),
 			"subfilepath": circle_subfilepath
 		};
 		diagram.diagram_elements.push(elem);
