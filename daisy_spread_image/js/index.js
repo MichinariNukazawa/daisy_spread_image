@@ -36,7 +36,7 @@ class Random {
 		const v = Math.abs(this.next());
 		const n = max - min;
 		const r = (v % n) + min;
-		console.log("Random.range:", min,max, v, n, r);
+		//console.log("Random.range:", min,max, v, n, r);
 		return r;
 	}
 }
@@ -125,12 +125,18 @@ function set_ui_generate_diagram(diagram){
 		if(! diagram.property.magickcircle_randomrotate){
 			rotate_degree = 0;
 		}
+		let scale = random.range(2, 10);
+		if(! diagram.property.magickcircle_randomsize){
+			scale = 10.0;
+		}
+		scale = scale / 10.0;
 
 		let circle_subfilepath = curcle_filepaths[ix];
 		let elem = {
 			"kind": "circle_svg",
 			"x": random.range(position_range.min.x, position_range.max.x),
 			"y": random.range(position_range.min.y, position_range.max.y),
+			"scale": scale,
 			"rotate_degree": rotate_degree,
 			"subfilepath": circle_subfilepath
 		};

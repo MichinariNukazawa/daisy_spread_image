@@ -142,8 +142,8 @@ module.exports.Renderer = class Renderer{
 		diagram_group_.svg(circleimage_svg)
 				//.move((i * 1000) - 500, (i * 1000) - 500)
 				.move(elem.x, elem.y)
-				//.scale(1.0, 1.0)
 				.rotate(elem.rotate_degree)
+				.scale(elem.scale, elem.scale)
 				.attr({
 					'opacity':	1.0,
 				});
