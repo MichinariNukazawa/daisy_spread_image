@@ -15,9 +15,38 @@ let rendering_handle = null;
 
 
 
+// 再現可能擬似乱数
+//! @notice 再現さえできればよく、かつ機能追加などであっさり呼び出しが増減するのでバージョン間の再現は諦める。
+// https://sbfl.net/blog/2017/06/01/javascript-reproducible-random/
+class Random {
+	constructor(seed = 88675123) {
+		this.x = 123456789;
+		this.y = 362436069;
+		this.z = 521288629;
+		this.w = seed;
+	}
+
+	// XorShift
+	next() {
+		let t;
+
+		t = this.x ^ (this.x << 11);
+		this.x = this.y; this.y = this.z; this.z = this.w;
+		return this.w = (this.w ^ (this.w >>> 19)) ^ (t ^ (t >>> 8)); 
+	}
+
+	range(min, max){
+		const v = Math.abs(this.next());
+		const n = max - min;
+		const r = (v % n) + min;
+		console.log("Random.range:", min,max, v, n, r);
+		return r;
+	}
+}
+
 function set_ui_from_property(property){
 	Object.keys(property).forEach(function (key) {
-		console.log(key, property[key]);
+		console.debug(key, property[key]);
 		const property_name = key;
 		const value = property[key];
 		let element = document.getElementById('editor-' + property_name);
@@ -52,7 +81,7 @@ function get_property_from_ui(){
 	return property;
 
 	/*
-	console.log(document.getElementsByTagName("input"));
+	console.debug(document.getElementsByTagName("input"));
 	let inputs = document.getElementsByTagName("input")
 	inputs.forEach(function(input){
 		if(! input.id.startWith('editor-')){
@@ -65,7 +94,7 @@ function get_property_from_ui(){
 
 function read_curcle_filepaths_from_dirpath(dirpath){
 	let a = fs.readdirSync(dirpath);
-	console.log(a);
+	console.debug(a);
 	return a.filter(name => /.svg$/.test(name));
 }
 
@@ -86,7 +115,7 @@ function set_ui_generate_diagram(diagram){
 	const property = diagram.property;
 
 	let curcle_filepaths = read_curcle_filepaths();
-	console.log(curcle_filepaths);
+	console.debug(curcle_filepaths);
 
 	/*
 
@@ -101,9 +130,13 @@ function set_ui_generate_diagram(diagram){
 	const dirpath = get_curcle_dirpath();
 	property.magickcircle_dirpath = dirpath;
 
+	let random = new Random(parseInt(diagram.property.randomseed_value, 10));
+
 	diagram.diagram_elements = [];
 	for(let i = 0; i < property.magickcircle_num; i++){
-		let circle_subfilepath = curcle_filepaths[i];
+		const ix = random.range(0, curcle_filepaths.length - 1);
+
+		let circle_subfilepath = curcle_filepaths[ix];
 		let elem = {
 			"kind": "circle_svg",
 			"x": (i * 1000 / 2),
@@ -112,7 +145,7 @@ function set_ui_generate_diagram(diagram){
 		};
 		diagram.diagram_elements.push(elem);
 
-		console.log(i, circle_subfilepath);
+		console.debug(i, circle_subfilepath);
 	}
 
 	Renderer.rerendering(rendering_handle, diagram, null, null, null);
@@ -133,13 +166,13 @@ function get_doc(){
 }
 
 window.addEventListener("load", function(){
-	console.log("wakeup");
+	console.debug("wakeup");
 
 	// doc init
 	const fileex = require('./js/fileex');
 	const filepathDefaultDoc = fileex.join(__dirname, "resource/default-document.daisyspreadimage");
 	global_doc = fileex.read_json(filepathDefaultDoc);
-	console.log(global_doc);
+	console.debug(global_doc);
 
 	set_ui_from_property(get_doc().diagram.property);
 
@@ -152,7 +185,7 @@ window.addEventListener("load", function(){
 	document.getElementById('apply-button').addEventListener('click', function(e){
 		const property = get_property_from_ui();
 
-		console.log("get prop", property);
+		console.debug("get prop", property);
 		get_doc().diagram.property = property;
 
 		set_ui_generate_diagram(get_doc().diagram);
