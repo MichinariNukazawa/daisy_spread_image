@@ -160,6 +160,22 @@ function set_ui_generate_diagram(diagram){
 */
 }
 
+function rerendering(){
+		const property = get_property_from_ui();
+
+		console.debug("get prop", property);
+		get_doc().diagram.property = property;
+
+		set_ui_generate_diagram(get_doc().diagram);
+}
+
+// https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+function getRandomInt(min, max){
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
+
 let global_doc = null;
 function get_doc(){
 	return global_doc;
@@ -183,12 +199,13 @@ window.addEventListener("load", function(){
 	document.getElementById('thumbnail-frame').style.display = "none";
 
 	document.getElementById('apply-button').addEventListener('click', function(e){
-		const property = get_property_from_ui();
+		rerendering();
+	}, false);
 
-		console.debug("get prop", property);
-		get_doc().diagram.property = property;
+	document.getElementById('generate-randomseed').addEventListener('click', function(e){
+		document.getElementById('editor-randomseed_value').value = getRandomInt(0, 65532);
 
-		set_ui_generate_diagram(get_doc().diagram);
+		rerendering();
 	}, false);
 });
 
