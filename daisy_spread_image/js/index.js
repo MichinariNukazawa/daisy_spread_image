@@ -36,6 +36,33 @@ function set_ui_from_property(property){
 	});
 }
 
+function get_property_from_ui(){
+	let property = {};
+
+	property.magickcircle_dirpath = get_curcle_dirpath();
+
+	property.document_width			= document.getElementById('editor-document_width').value;
+	property.document_height		= document.getElementById('editor-document_height').value;
+	property.randomseed_value		= document.getElementById('editor-randomseed_value').value;
+	property.magickcircle_num		= document.getElementById('editor-magickcircle_num').value;
+	property.magickcircle_randomsize	= document.getElementById('editor-magickcircle_randomsize').checked;
+	property.magickcircle_randomrotate	= document.getElementById('editor-magickcircle_randomrotate').checked;
+	property.magickcircle_transparent	= document.getElementById('editor-magickcircle_transparent').value;
+
+	return property;
+
+	/*
+	console.log(document.getElementsByTagName("input"));
+	let inputs = document.getElementsByTagName("input")
+	inputs.forEach(function(input){
+		if(! input.id.startWith('editor-')){
+			continue;
+		}
+		property[key] = input.value
+	});
+	*/
+}
+
 function read_curcle_filepaths_from_dirpath(dirpath){
 	let a = fs.readdirSync(dirpath);
 	console.log(a);
@@ -54,8 +81,9 @@ function read_curcle_filepaths(){
 	return read_curcle_filepaths_from_dirpath(dirpath);
 }
 
-function set_ui_generate_diagram(diagram, property){
+function set_ui_generate_diagram(diagram){
 	const fileex = require('./js/fileex');
+	const property = diagram.property;
 
 	let curcle_filepaths = read_curcle_filepaths();
 	console.log(curcle_filepaths);
@@ -73,6 +101,7 @@ function set_ui_generate_diagram(diagram, property){
 	const dirpath = get_curcle_dirpath();
 	property.magickcircle_dirpath = dirpath;
 
+	diagram.diagram_elements = [];
 	for(let i = 0; i < property.magickcircle_num; i++){
 		let circle_subfilepath = curcle_filepaths[i];
 		let elem = {
@@ -98,48 +127,35 @@ function set_ui_generate_diagram(diagram, property){
 */
 }
 
+let global_doc = null;
+function get_doc(){
+	return global_doc;
+}
+
 window.addEventListener("load", function(){
 	console.log("wakeup");
 
+	// doc init
 	const fileex = require('./js/fileex');
 	const filepathDefaultDoc = fileex.join(__dirname, "resource/default-document.daisyspreadimage");
-	const doc = fileex.read_json(filepathDefaultDoc);
-	console.log(doc);
+	global_doc = fileex.read_json(filepathDefaultDoc);
+	console.log(global_doc);
 
-	const property = doc.diagram.property;
-	set_ui_from_property(property);
+	set_ui_from_property(get_doc().diagram.property);
 
 	rendering_handle = new RenderingHandle('canvas');
 
-	set_ui_generate_diagram(doc.diagram, property);
+	set_ui_generate_diagram(get_doc().diagram);
 
 	document.getElementById('thumbnail-frame').style.display = "none";
-	/*
-	let src = document.getElementById('canvas');
-	//let src = document.getElementById('target-image');
-	let dst = src.cloneNode(true);
-	let target = document.getElementById('thumbnail');
-	target.appendChild(dst);
-	src.width = 600;
-	dst.height = "300px";
 
-	console.log(dst.childNodes);
-	dst.childNodes.forEach(function(node){
-		console.log(/^Svg/i.test(node.id));
-		console.log(node.type, node.nodeType, node.id, node);
-		//const src_height = node.getAttribute("height");
-		if(/^Svg/i.test(node.id)){
-			//node.style.height = "300px";
-			//node.height = 300;
-			//node.width = 300;
-			//const src_height = parseInt(node["height"]);
-			const src_height = parseInt(node.getAttribute("height"), 10);
-			const scale = 300 / src_height;
-			node.setAttribute("height", 300);
-			//node.setAttribute("transform", "scale(" + scale + ")");
-			node.setAttribute("style", "transform:scale(" + scale + "); transform:translate(-5000, -5000);");
-		}
-	});
-	*/
+	document.getElementById('apply-button').addEventListener('click', function(e){
+		const property = get_property_from_ui();
+
+		console.log("get prop", property);
+		get_doc().diagram.property = property;
+
+		set_ui_generate_diagram(get_doc().diagram);
+	}, false);
 });
 

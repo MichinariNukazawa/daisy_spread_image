@@ -65,7 +65,10 @@ module.exports.RenderingHandle = class RenderingHandle{
 
 	clear()
 	{
+		console.log("xxxxxxxxXXXXXX");
+		this.groups = [];
 		this.draw.clear();
+
 		this.groups.root_group			= this.draw.group().addClass('dd__root-group');
 		this.groups.background_group		= this.get_root_group().group().addClass('dd__background-group');
 		this.groups.diagram_group		= this.get_root_group().group().addClass('dd__diagram-group');
@@ -79,6 +82,8 @@ module.exports.RenderingHandle = class RenderingHandle{
 module.exports.Renderer = class Renderer{
 	static rerendering(rendering_handle, src_diagram, focus, mouse_state, tool_kind)
 	{
+		rendering_handle.clear();
+
 		const deepcopy = function(obj){
 			return JSON.parse(JSON.stringify(obj))
 		};

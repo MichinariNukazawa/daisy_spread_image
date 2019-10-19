@@ -128,3 +128,8 @@ table th{
 	padding: 5px;
 }
 
+#apply-button{
+	width:100%;
+	font-size: 140%;
+}
+
