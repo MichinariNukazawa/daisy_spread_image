@@ -65,7 +65,7 @@ module.exports.RenderingHandle = class RenderingHandle{
 
 	clear()
 	{
-		console.log("xxxxxxxxXXXXXX");
+		console.debug("xxxxxxxxXXXXXX");
 		this.groups = [];
 		this.draw.clear();
 
@@ -134,7 +134,7 @@ module.exports.Renderer = class Renderer{
 	}
 
 	static rendering_circle_svg_(rendering_handle, diagram, elem){
-		console.log(diagram.property.magickcircle_dirpath, elem.subfilepath);
+		console.debug(diagram.property.magickcircle_dirpath, elem.subfilepath);
 
 		const filepath = path.join(diagram.property.magickcircle_dirpath, elem.subfilepath);
 		let circleimage_svg = fs.readFileSync(filepath, 'utf8');
@@ -143,6 +143,7 @@ module.exports.Renderer = class Renderer{
 				//.move((i * 1000) - 500, (i * 1000) - 500)
 				.move(elem.x, elem.y)
 				//.scale(1.0, 1.0)
+				.rotate(elem.rotate_degree)
 				.attr({
 					'opacity':	1.0,
 				});
@@ -163,7 +164,7 @@ module.exports.Renderer = class Renderer{
 
 		for(let i = 0; i < diagram.diagram_elements.length; i++){
 			const diagram_element = diagram.diagram_elements[i];
-			console.log(i, diagram_element);
+			console.debug(i, diagram_element);
 
 			switch(diagram_element.kind){
 				case 'circle_svg':

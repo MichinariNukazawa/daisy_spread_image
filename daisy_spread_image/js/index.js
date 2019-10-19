@@ -6,10 +6,7 @@ const sprintf = require('sprintf-js').sprintf;
 let SVG = require('svg.js');
 const Renderer = require('./js/renderer').Renderer;
 const RenderingHandle = require('./js/renderer').RenderingHandle;
-/*
-const {app} = require('electron').remote;
-const sprintf = require('sprintf-js').sprintf;
-*/
+//const {app} = require('electron').remote;
 
 let rendering_handle = null;
 
@@ -43,6 +40,8 @@ class Random {
 		return r;
 	}
 }
+
+
 
 function set_ui_from_property(property){
 	Object.keys(property).forEach(function (key) {
@@ -79,17 +78,6 @@ function get_property_from_ui(){
 	property.magickcircle_transparent	= document.getElementById('editor-magickcircle_transparent').value;
 
 	return property;
-
-	/*
-	console.debug(document.getElementsByTagName("input"));
-	let inputs = document.getElementsByTagName("input")
-	inputs.forEach(function(input){
-		if(! input.id.startWith('editor-')){
-			continue;
-		}
-		property[key] = input.value
-	});
-	*/
 }
 
 function read_curcle_filepaths_from_dirpath(dirpath){
@@ -117,16 +105,6 @@ function set_ui_generate_diagram(diagram){
 	let curcle_filepaths = read_curcle_filepaths();
 	console.debug(curcle_filepaths);
 
-	/*
-
-	const elemId = 'canvas';
-	//const elemId = 'target-image';
-	let svg = SVG(elemId).size(property.document_width, property.document_height);
-	svg.clear();
-	let diagram_group = svg.group().addClass('diagram_group');
-	diagram_group.scale(0.1, 0.1);
-*/
-
 	const dirpath = get_curcle_dirpath();
 	property.magickcircle_dirpath = dirpath;
 
@@ -140,13 +118,20 @@ function set_ui_generate_diagram(diagram){
 
 	diagram.diagram_elements = [];
 	for(let i = 0; i < property.magickcircle_num; i++){
-		const ix = random.range(0, curcle_filepaths.length - 1);
+		const ix = random.range(0, curcle_filepaths.length);
+
+		// randomrotate無効にした場合に位置他が変わらないよう乱数を取ってから消す。
+		let rotate_degree = random.range(0, 360);
+		if(! diagram.property.magickcircle_randomrotate){
+			rotate_degree = 0;
+		}
 
 		let circle_subfilepath = curcle_filepaths[ix];
 		let elem = {
 			"kind": "circle_svg",
 			"x": random.range(position_range.min.x, position_range.max.x),
 			"y": random.range(position_range.min.y, position_range.max.y),
+			"rotate_degree": rotate_degree,
 			"subfilepath": circle_subfilepath
 		};
 		diagram.diagram_elements.push(elem);
@@ -156,14 +141,6 @@ function set_ui_generate_diagram(diagram){
 
 	Renderer.rerendering(rendering_handle, diagram, null, null, null);
 
-/*
-	Renderer.rerendering(
-		rendering_handle,
-		daisy.get_current_diagram(),
-		Doc.get_focus(daisy.get_current_doc()),
-		mouse_state,
-		tool.get_tool_kind());
-*/
 }
 
 function rerendering(){
