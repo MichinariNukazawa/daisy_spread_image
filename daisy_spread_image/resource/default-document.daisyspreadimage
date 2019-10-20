@@ -11,6 +11,8 @@
 			"randomseed_value": 128,
 			"magickcircle_num": 5,
 			"magickcircle_unique_picking": true,
+			"magickcircle_not_collision": true,
+			"magickcircle_imagescale": 0.1,
 			"magickcircle_randomsize": true,
 			"magickcircle_randomrotate": true
 		},

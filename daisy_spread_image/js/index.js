@@ -42,6 +42,12 @@ class Random {
 	}
 }
 
+class Point{
+	static between_s(p0, p1){
+		return Math.abs(p0.x - p1.x) + Math.abs(p0.y - p1.y);
+	}
+}
+
 
 
 function set_ui_from_property(property){
@@ -75,6 +81,8 @@ function get_property_from_ui(){
 	property.randomseed_value		= document.getElementById('editor-randomseed_value').value;
 	property.magickcircle_num		= document.getElementById('editor-magickcircle_num').value;
 	property.magickcircle_unique_picking	= document.getElementById('editor-magickcircle_unique_picking').checked;
+	property.magickcircle_not_collision	= document.getElementById('editor-magickcircle_not_collision').checked;
+	property.magickcircle_imagescale	= document.getElementById('editor-magickcircle_imagescale').value;
 	property.magickcircle_randomsize	= document.getElementById('editor-magickcircle_randomsize').checked;
 	property.magickcircle_randomrotate	= document.getElementById('editor-magickcircle_randomrotate').checked;
 
@@ -99,6 +107,29 @@ function read_curcle_filepaths(){
 	return read_curcle_filepaths_from_dirpath(dirpath);
 }
 
+function generate_position_not_collision(random, position_range, diagram_elements){
+	for(let i = 0; i < 50; i++){
+		let position = {
+			"x": random.range(position_range.min.x, position_range.max.x),
+			"y": random.range(position_range.min.y, position_range.max.y),
+		};
+
+		let is_collision = false;
+		for(let eix = 0; eix < diagram_elements.length; eix++){
+			// @todo magickcircleサイズに関わらず固定値
+			if(1200 > Point.between_s(position, diagram_elements[eix])){
+				is_collision = true;
+				break;
+			}
+		}
+		if(! is_collision){ // 衝突していなければそれを返す
+			return position;
+		}
+	}
+
+	return null;
+}
+
 function set_ui_generate_diagram(diagram){
 	const fileex = require('./js/fileex');
 	const property = diagram.property;
@@ -114,7 +145,10 @@ function set_ui_generate_diagram(diagram){
 	// @todo 拡大縮小とデフォルト画像サイズをハードコートしている
 	const position_range = {
 		"min": {"x": 0, "y": 0},
-		"max": {"x": ((diagram.property.document_width / 0.1) - 1000), "y": ((diagram.property.document_height / 0.1) - 1000)},
+		"max": {
+			"x": ((diagram.property.document_width  / diagram.property.magickcircle_imagescale) - 1000),
+			"y": ((diagram.property.document_height / diagram.property.magickcircle_imagescale) - 1000)
+		},
 	};
 
 	diagram.diagram_elements = [];
@@ -143,10 +177,26 @@ function set_ui_generate_diagram(diagram){
 		}
 		console.debug(i, circle_subfilepath);
 
+		let position;
+		if(! diagram.property.magickcircle_not_collision){
+			position = {
+				"x": random.range(position_range.min.x, position_range.max.x),
+				"y": random.range(position_range.min.y, position_range.max.y),
+			};
+		}else{
+			console.log("");
+
+			position = generate_position_not_collision(random, position_range, diagram.diagram_elements);
+			if(null == position){
+				alert("position collision. document full.");
+				break;
+			}
+		}
+
 		let elem = {
 			"kind": "circle_svg",
-			"x": random.range(position_range.min.x, position_range.max.x),
-			"y": random.range(position_range.min.y, position_range.max.y),
+			"x": position.x,
+			"y": position.y,
 			"scale": scale,
 			"rotate_degree": rotate_degree,
 			"subfilepath": circle_subfilepath

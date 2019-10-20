@@ -139,11 +139,13 @@ module.exports.Renderer = class Renderer{
 		const filepath = path.join(diagram.property.magickcircle_dirpath, elem.subfilepath);
 		let circleimage_svg = fs.readFileSync(filepath, 'utf8');
 		let diagram_group_ = rendering_handle.get_diagram_group().group().addClass('group__AA');
+		diagram_group_.scale(diagram.property.magickcircle_imagescale, diagram.property.magickcircle_imagescale);
 		diagram_group_.svg(circleimage_svg)
 				//.move((i * 1000) - 500, (i * 1000) - 500)
 				.move(elem.x, elem.y)
 				.rotate(elem.rotate_degree)
-				.scale(elem.scale, elem.scale)
+				//.scale(elem.scale, elem.scale)
+				.scale(elem.scale * diagram.property.magickcircle_imagescale, elem.scale * diagram.property.magickcircle_imagescale)
 				.attr({
 					'opacity':	1.0,
 				});
@@ -160,7 +162,7 @@ module.exports.Renderer = class Renderer{
 		let draw = rendering_handle.get_draw();
 		draw.size(diagram.property.document_width, diagram.property.document_height);
 
-		rendering_handle.get_diagram_group().scale(0.1, 0.1);
+		//rendering_handle.get_diagram_group().scale(diagram.property.magickcircle_imagescale, diagram.property.magickcircle_imagescale);
 
 		for(let i = 0; i < diagram.diagram_elements.length; i++){
 			const diagram_element = diagram.diagram_elements[i];
