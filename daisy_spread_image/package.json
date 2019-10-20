@@ -4,12 +4,17 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
-    "electron": "^6.0.12",
+    "about-window": "^1.13.1",
+    "data-uri-to-buffer": "^3.0.0",
+    "save-svg-as-png": "^1.4.14",
+    "sprintf-js": "^1.1.2",
     "svg.js": "^2.7.1",
-    "svgjs": "^2.6.2"
+    "svg2png": "^4.1.1",
+    "svgdom": "0.0.20",
+    "xml-formatter": "^1.2.0"
   },
   "devDependencies": {
-    "sprintf-js": "^1.1.2"
+    "electron": "^6.0.12"
   },
   "scripts": {
     "running": "electron .",

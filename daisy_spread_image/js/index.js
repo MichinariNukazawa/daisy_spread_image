@@ -4,9 +4,10 @@ const fs = require("fs");
 const path = require('path');
 const sprintf = require('sprintf-js').sprintf;
 let SVG = require('svg.js');
+//const {app} = require('electron').remote;
 const Renderer = require('./js/renderer').Renderer;
 const RenderingHandle = require('./js/renderer').RenderingHandle;
-//const {app} = require('electron').remote;
+const DaisyIO = require('./js/daisy-io');
 
 let rendering_handle = null;
 
