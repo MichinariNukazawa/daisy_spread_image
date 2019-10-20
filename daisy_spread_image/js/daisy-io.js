@@ -77,44 +77,6 @@ module.exports = class DaisyIO{
 		return res;
 	}
 
-	static get_dummy_draw_from_diagram_(diagram, opt, err_)
-	{
-		const RenderingHandle = require('./renderer').RenderingHandle;
-		const Renderer = require('./renderer').Renderer;
-		const Diagram = require('./diagram');
-
-		if(!opt.hasOwnProperty('scale')){
-			DaisyIO.set_err_(err_, "warning", "Export", "internal nothing opt.scale.");
-			return null;
-		}
-
-		let dummy_elem = document.createElementNS('http://www.w3.org/2000/svg','svg');
-		let dummy_rhandle = new RenderingHandle(dummy_elem);
-		let draw = dummy_rhandle.get_draw();
-		if(null === draw){
-			DaisyIO.set_err_(err_, "warning", "Export", "internal dummy element can not generate.");
-			return null;
-		}
-
-		Renderer.rendering_(dummy_rhandle, diagram);
-
-		dummy_rhandle.get_editor_group().remove();
-
-		if(opt.hasOwnProperty('background_color')){
-			dummy_rhandle.get_background_group().rect('100%','100%')
-					.attr({
-						'fill':		opt.background_color,
-					});
-		}
-
-		const size = Diagram.get_size(diagram);
-
-		dummy_rhandle.get_draw().size(size.width * opt.scale, size.height * opt.scale);
-		dummy_rhandle.get_root_group().scale(opt.scale, opt.scale);
-
-		return draw;
-	}
-
 	static write_export_png_from_diagram_(filepath, diagram, errs_)
 	{
 		let err_ = {};
@@ -128,7 +90,8 @@ if(process.platform === 'win32'){
 let svgAsPngUri = require('save-svg-as-png').svgAsPngUri;
 let dataUriToBuffer = require('data-uri-to-buffer');
 
-		let draw = DaisyIO.get_dummy_draw_from_diagram_(diagram, {'scale':1}, err_);
+		const opt = {'scale':1};
+		let draw = Renderer.generate_svgstr_from_diagram(diagram, opt);
 		if(null === draw){
 			DaisyIO.add_errs_(errs_, err_.level, "Export", err_.message);
 			return false;
@@ -216,12 +179,7 @@ let dataUriToBuffer = require('data-uri-to-buffer');
 		const xml_formatter = require('xml-formatter');
 		const Version = require('./version');
 
-		let draw = DaisyIO.get_dummy_draw_from_diagram_(diagram, opt, err_);
-		if(null === draw){
-			return null;
-		}
-
-		let s = draw.svg();
+		let s = Renderer.generate_svgstr_from_diagram(diagram, opt);
 
 		const h = sprintf("<!-- Generator: %s %s  -->", Version.get_name(), Version.get_version());
 		s = h + s;
@@ -229,6 +187,5 @@ let dataUriToBuffer = require('data-uri-to-buffer');
 		let options = {indentation: '\t',};
 		return xml_formatter(s, options);
 	}
-
 };
 

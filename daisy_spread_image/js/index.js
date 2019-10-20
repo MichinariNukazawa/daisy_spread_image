@@ -116,8 +116,9 @@ function generate_position_not_collision(random, position_range, diagram_element
 
 		let is_collision = false;
 		for(let eix = 0; eix < diagram_elements.length; eix++){
-			// @todo magickcircleサイズに関わらず固定値
-			if(1200 > Point.between_s(position, diagram_elements[eix])){
+			// @todo magickcircle自体の元サイズに関わらず固定値
+			const bet = 1400 * diagram_elements[eix].scale;
+			if(bet > Point.between_s(position, diagram_elements[eix])){
 				is_collision = true;
 				break;
 			}
@@ -142,12 +143,12 @@ function set_ui_generate_diagram(diagram){
 
 	let random = new Random(parseInt(diagram.property.randomseed_value, 10));
 
-	// @todo 拡大縮小とデフォルト画像サイズをハードコートしている
+	// @todo デフォルト画像サイズをハードコートしている
 	const position_range = {
 		"min": {"x": 0, "y": 0},
 		"max": {
-			"x": ((diagram.property.document_width  / diagram.property.magickcircle_imagescale) - 1000),
-			"y": ((diagram.property.document_height / diagram.property.magickcircle_imagescale) - 1000)
+			"x": (diagram.property.document_width  - 1000),
+			"y": (diagram.property.document_height - 1000)
 		},
 	};
 
@@ -165,11 +166,12 @@ function set_ui_generate_diagram(diagram){
 		if(! diagram.property.magickcircle_randomrotate){
 			rotate_degree = 0;
 		}
-		let scale = random.range(2, 10);
+		let scale = random.range(5, 15);
 		if(! diagram.property.magickcircle_randomsize){
 			scale = 10.0;
 		}
 		scale = scale / 10.0;
+		scale *= diagram.property.magickcircle_imagescale;
 
 		let circle_subfilepath = curcle_filepaths[ix];
 		if(diagram.property.magickcircle_unique_picking){
@@ -184,8 +186,6 @@ function set_ui_generate_diagram(diagram){
 				"y": random.range(position_range.min.y, position_range.max.y),
 			};
 		}else{
-			console.log("");
-
 			position = generate_position_not_collision(random, position_range, diagram.diagram_elements);
 			if(null == position){
 				alert("position collision. document full.");

@@ -98,9 +98,14 @@ module.exports.Renderer = class Renderer{
 		}
 	}
 
-	static rendering_diagram_(rendering_handle, diagram, focus, mouse_state, tool_kind)
-	{
-		Renderer.rendering_(rendering_handle, diagram);
+	static rendering_diagram_(rendering_handle, diagram, focus, mouse_state, tool_kind){
+		rendering_handle.get_draw().size( diagram.property.document_width, diagram.property.document_height);
+
+		const opt = {};
+		const svgstr_diagram = Renderer.generate_svgstr_from_diagram(diagram, opt);
+
+		rendering_handle.get_diagram_group().svg(svgstr_diagram);
+		//rendering_handle.get_diagram_group().scale(0.1, 0.1);
 /*
 		Renderer.draw_focus_(rendering_handle, focus);
 
@@ -133,36 +138,47 @@ module.exports.Renderer = class Renderer{
 		}
 	}
 
-	static rendering_circle_svg_(rendering_handle, diagram, elem){
+	static groupdrawing_circle_svg_(circle_group, diagram, elem){
 		console.debug(diagram.property.magickcircle_dirpath, elem.subfilepath);
 
 		const filepath = path.join(diagram.property.magickcircle_dirpath, elem.subfilepath);
 		let circleimage_svg = fs.readFileSync(filepath, 'utf8');
-		let diagram_group_ = rendering_handle.get_diagram_group().group().addClass('group__AA');
-		diagram_group_.scale(diagram.property.magickcircle_imagescale, diagram.property.magickcircle_imagescale);
+		let diagram_group_ = circle_group.group().addClass('dd__circle_group__AA');
 		diagram_group_.svg(circleimage_svg)
 				//.move((i * 1000) - 500, (i * 1000) - 500)
 				.move(elem.x, elem.y)
+				.scale(elem.scale, elem.scale)
 				.rotate(elem.rotate_degree)
-				//.scale(elem.scale, elem.scale)
-				.scale(elem.scale * diagram.property.magickcircle_imagescale, elem.scale * diagram.property.magickcircle_imagescale)
+				//.scale(elem.scale * diagram.property.magickcircle_imagescale, elem.scale * diagram.property.magickcircle_imagescale)
 				.attr({
 					'opacity':	1.0,
 				});
 	}
 
-	static rendering_(rendering_handle, diagram){
-		let other_group = rendering_handle.get_other_group();
+	static generate_svgjsdraw_from_diagram(diagram, opt){
+		console.debug("diag", diagram.property.document_width, diagram.property.document_height);
 
-		if(null === diagram){
-			console.debug('Rendering:diagram is null');
-			return;
+		let dummy_elem = document.createElementNS('http://www.w3.org/2000/svg','svg');
+		let draw = SVG(dummy_elem).size(0, 0);
+
+		let root_group = draw.group().addClass('dd__root_group');
+
+		if(opt.hasOwnProperty('scale')){
+			draw.size(diagram.property.document_width * opt.scale, diagram.property.document_height * opt.scale);
+			root_group.scale(opt.scale, opt.scale);
+		}else{
+			draw.size(diagram.property.document_width, diagram.property.document_height);
 		}
 
-		let draw = rendering_handle.get_draw();
-		draw.size(diagram.property.document_width, diagram.property.document_height);
+		if(opt.hasOwnProperty('background_color')){
+			let backgroud_group = root_group.group().addClass('dd__background');
+			backgroud_group.rect('100%','100%')
+					.attr({
+						'fill':		opt.background_color,
+					});
+		}
 
-		//rendering_handle.get_diagram_group().scale(diagram.property.magickcircle_imagescale, diagram.property.magickcircle_imagescale);
+		let circle_group = root_group.group().addClass('dd__circle_group');
 
 		for(let i = 0; i < diagram.diagram_elements.length; i++){
 			const diagram_element = diagram.diagram_elements[i];
@@ -170,13 +186,20 @@ module.exports.Renderer = class Renderer{
 
 			switch(diagram_element.kind){
 				case 'circle_svg':
-					this.rendering_circle_svg_(rendering_handle, diagram, diagram_element);
+					Renderer.groupdrawing_circle_svg_(circle_group, diagram, diagram_element);
 					break;
 				default:
 					console.error("bug", i, diagram_element);
 					alert(diagram_element);
 			}
 		}
+
+		return draw;
+	}
+
+	static generate_svgstr_from_diagram(diagram, opt){
+		const draw = Renderer.generate_svgjsdraw_from_diagram(diagram, opt);
+		return draw.svg();
 	}
 };
 
