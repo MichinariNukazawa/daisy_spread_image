@@ -74,6 +74,7 @@ function get_property_from_ui(){
 	property.document_height		= document.getElementById('editor-document_height').value;
 	property.randomseed_value		= document.getElementById('editor-randomseed_value').value;
 	property.magickcircle_num		= document.getElementById('editor-magickcircle_num').value;
+	property.magickcircle_unique_picking	= document.getElementById('editor-magickcircle_unique_picking').checked;
 	property.magickcircle_randomsize	= document.getElementById('editor-magickcircle_randomsize').checked;
 	property.magickcircle_randomrotate	= document.getElementById('editor-magickcircle_randomrotate').checked;
 
@@ -120,6 +121,11 @@ function set_ui_generate_diagram(diagram){
 	for(let i = 0; i < property.magickcircle_num; i++){
 		const ix = random.range(0, curcle_filepaths.length);
 
+		if(0 === curcle_filepaths.length){
+			alert("empty magickcircle (or full unique)");
+			break;
+		}
+
 		// randomrotate無効にした場合に位置他が変わらないよう乱数を取ってから消す。
 		let rotate_degree = random.range(0, 360);
 		if(! diagram.property.magickcircle_randomrotate){
@@ -132,6 +138,11 @@ function set_ui_generate_diagram(diagram){
 		scale = scale / 10.0;
 
 		let circle_subfilepath = curcle_filepaths[ix];
+		if(diagram.property.magickcircle_unique_picking){
+			curcle_filepaths.splice(ix, 1);
+		}
+		console.debug(i, circle_subfilepath);
+
 		let elem = {
 			"kind": "circle_svg",
 			"x": random.range(position_range.min.x, position_range.max.x),
@@ -141,8 +152,6 @@ function set_ui_generate_diagram(diagram){
 			"subfilepath": circle_subfilepath
 		};
 		diagram.diagram_elements.push(elem);
-
-		console.debug(i, circle_subfilepath);
 	}
 
 	Renderer.rerendering(rendering_handle, diagram, null, null, null);

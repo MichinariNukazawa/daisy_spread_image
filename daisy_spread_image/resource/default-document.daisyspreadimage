@@ -10,6 +10,7 @@
 			"document_height": 500,
 			"randomseed_value": 128,
 			"magickcircle_num": 5,
+			"magickcircle_unique_picking": true,
 			"magickcircle_randomsize": true,
 			"magickcircle_randomrotate": true
 		},
