@@ -76,7 +76,6 @@ function get_property_from_ui(){
 	property.magickcircle_num		= document.getElementById('editor-magickcircle_num').value;
 	property.magickcircle_randomsize	= document.getElementById('editor-magickcircle_randomsize').checked;
 	property.magickcircle_randomrotate	= document.getElementById('editor-magickcircle_randomrotate').checked;
-	property.magickcircle_transparent	= document.getElementById('editor-magickcircle_transparent').value;
 
 	return property;
 }

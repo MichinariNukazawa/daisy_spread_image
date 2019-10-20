@@ -11,8 +11,7 @@
 			"randomseed_value": 128,
 			"magickcircle_num": 5,
 			"magickcircle_randomsize": true,
-			"magickcircle_randomrotate": true,
-			"magickcircle_transparent": 30
+			"magickcircle_randomrotate": true
 		},
 		"diagram_elements": [
 		]
