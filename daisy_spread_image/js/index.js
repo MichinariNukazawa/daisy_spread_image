@@ -143,12 +143,11 @@ function set_ui_generate_diagram(diagram){
 
 	let random = new Random(parseInt(diagram.property.randomseed_value, 10));
 
-	// @todo デフォルト画像サイズをハードコートしている
 	const position_range = {
 		"min": {"x": 0, "y": 0},
 		"max": {
-			"x": (diagram.property.document_width  - 1000),
-			"y": (diagram.property.document_height - 1000)
+			"x": diagram.property.document_width  - (1000 * diagram.property.magickcircle_imagescale),
+			"y": diagram.property.document_height - (1000 * diagram.property.magickcircle_imagescale)
 		},
 	};
 
