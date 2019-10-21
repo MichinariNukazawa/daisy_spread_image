@@ -136,7 +136,7 @@ function set_ui_generate_diagram(diagram){
 	const property = diagram.property;
 
 	let curcle_filepaths = read_curcle_filepaths();
-	console.debug(curcle_filepaths);
+	document.getElementById('magickcircle_source_num').textContent = sprintf("%3d", curcle_filepaths.length);
 
 	const dirpath = get_curcle_dirpath();
 	property.magickcircle_dirpath = dirpath;

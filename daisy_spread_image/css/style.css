@@ -17,6 +17,7 @@ div{
 input{
 	font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
 	vertical-align: bottom;
+	font-size: 0.8em;
 }
 
 input[type="number"]{
@@ -25,8 +26,16 @@ input[type="number"]{
 	direction: rtl;
 }
 
+input[type="text"]{
+	width: 70px;
+}
+
 input[type="checkbox"][disabled] + span{
 	color: #707070;
+}
+
+button{
+	font-size: 0.8em;
 }
 
 #editor__background-transparent-view{
@@ -35,7 +44,7 @@ input[type="checkbox"][disabled] + span{
 
 #edit-control{
 	text-align: right;
-	font-size:120%;
+	font-size: 120%;
 }
 
 .box-container{
@@ -57,44 +66,9 @@ table th{
 	font-weight: normal;
 }
 
-#tool{
-	font-size:120%;
-}
-
-#tool button{
-	margin: 2px;
-	padding: 0px;
-}
-#tool object{
-	margin: 0px;
-	padding: 0px;
-	border: solid 1px rgba(0, 0, 0, 0.5);
-	pointer-events: none;	/* click event */
-}
-
-#tool .tool-selected{
-	background-color: rgba(0, 128, 255, 0.3);
-}
-
-#tool button + .hover_message{
-	display: none;
-
-	position: absolute;
-	margin: 10px 0 1.5em 15px;
-	padding: 4px 5px;
-	min-width: 120px;
-	max-width: 100%;
-	background: #a0d0ff;
-	border-radius: 4px;
-	z-index: 5;
-}
-
-#tool button:hover + .hover_message{
-	display: block;
-}
-
 #property-editor{
-	font-size:120%;
+	width: 320px;
+	font-size: 120%;
 }
 
 #canvas-header{
@@ -110,6 +84,10 @@ table th{
 #thumbnail-container{
 	border: solid 1px rgba(0, 0, 0, 0.3);
 	background: white;
+}
+
+#magickcircle_source_num{
+	font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
 }
 
 #canvas-container{
