@@ -144,12 +144,10 @@ module.exports.Renderer = class Renderer{
 		const filepath = path.join(diagram.property.magickcircle_dirpath, elem.subfilepath);
 		let circleimage_svg = fs.readFileSync(filepath, 'utf8');
 		let diagram_group_ = circle_group.group().addClass('dd__circle_group__AA');
+				diagram_group_.move(elem.x, elem.y)
+				diagram_group_.scale(elem.scale, elem.scale)
 		diagram_group_.svg(circleimage_svg)
-				//.move((i * 1000) - 500, (i * 1000) - 500)
-				.move(elem.x, elem.y)
-				.scale(elem.scale, elem.scale)
-				.rotate(elem.rotate_degree)
-				//.scale(elem.scale * diagram.property.magickcircle_imagescale, elem.scale * diagram.property.magickcircle_imagescale)
+				.rotate(elem.rotate_degree, 1000 / 2, 1000 / 2)
 				.attr({
 					'opacity':	1.0,
 				});
