@@ -50,12 +50,38 @@ class Point{
 
 
 
-function set_ui_from_property(property){
+function add_event_listener_from_property(property, callback_){
 	Object.keys(property).forEach(function (key) {
 		console.debug(key, property[key]);
+
 		const property_name = key;
 		const value = property[key];
 		let element = document.getElementById('editor-' + property_name);
+		if(! element){
+			console.warn("bug or not implement", property_name); // not implement 'magickcircle_dirpath'
+			return; // == continue;
+		}
+		switch(element.type){
+			case 'checkbox':
+				element.addEventListener('click', callback_, false);
+				break;
+			default:
+				element.addEventListener('change', callback_, false);
+		}
+	});
+}
+
+function set_ui_from_property(property){
+	Object.keys(property).forEach(function (key) {
+		console.debug(key, property[key]);
+
+		const property_name = key;
+		const value = property[key];
+		let element = document.getElementById('editor-' + property_name);
+		if(! element){
+			console.error("bug");
+			return; // == continue;
+		}
 		switch(element.type){
 			case 'checkbox':
 				element.checked = value;
@@ -255,5 +281,12 @@ window.addEventListener("load", function(){
 
 		rerendering();
 	}, false);
+
+	let callback_editor_change_ = function(e){
+		console.log(e.target);
+
+		rerendering();
+	};
+	add_event_listener_from_property(get_doc().diagram.property, callback_editor_change_);
 });
 
