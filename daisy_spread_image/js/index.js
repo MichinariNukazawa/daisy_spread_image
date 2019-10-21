@@ -107,8 +107,8 @@ function read_curcle_filepaths(){
 	return read_curcle_filepaths_from_dirpath(dirpath);
 }
 
-function generate_position_not_collision(random, position_range, diagram_elements){
-	for(let i = 0; i < 150; i++){
+function generate_position_not_collision(random, position_range, elem_scale, diagram_elements){
+	for(let i = 0; i < 400; i++){
 		let position = {
 			"x": random.range(position_range.min.x, position_range.max.x),
 			"y": random.range(position_range.min.y, position_range.max.y),
@@ -116,8 +116,9 @@ function generate_position_not_collision(random, position_range, diagram_element
 
 		let is_collision = false;
 		for(let eix = 0; eix < diagram_elements.length; eix++){
-			// @todo magickcircle自体の元サイズに関わらず固定値
-			const bet = 1400 * diagram_elements[eix].scale;
+			// @todo magickcircle自体の元サイズに関わらず左上基準位置の距離だけ見ている
+			const col = 1600;
+			const bet = (col / 2 * diagram_elements[eix].scale) + (col / 2 * elem_scale);
 			if(bet > Point.between_s(position, diagram_elements[eix])){
 				is_collision = true;
 				break;
@@ -185,7 +186,7 @@ function set_ui_generate_diagram(diagram){
 				"y": random.range(position_range.min.y, position_range.max.y),
 			};
 		}else{
-			position = generate_position_not_collision(random, position_range, diagram.diagram_elements);
+			position = generate_position_not_collision(random, position_range, scale, diagram.diagram_elements);
 			if(null == position){
 				alert("position collision. document full.");
 				break;
