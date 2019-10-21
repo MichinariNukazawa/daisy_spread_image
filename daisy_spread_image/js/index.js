@@ -108,7 +108,7 @@ function read_curcle_filepaths(){
 }
 
 function generate_position_not_collision(random, position_range, diagram_elements){
-	for(let i = 0; i < 50; i++){
+	for(let i = 0; i < 150; i++){
 		let position = {
 			"x": random.range(position_range.min.x, position_range.max.x),
 			"y": random.range(position_range.min.y, position_range.max.y),
