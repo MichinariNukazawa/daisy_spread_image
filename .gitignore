@@ -60,3 +60,5 @@ node_modules/
 release/
 package-lock.json
 
+!.travis.yml
+
