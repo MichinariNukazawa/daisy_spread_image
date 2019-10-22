@@ -9,3 +9,5 @@ daisy spread image is magickcircle free scale image generator.
 daisy spread imageは、魔法陣ばら撒き画像の生成アプリです。  
 Win/Mac/Linux対応。  
 
+![daisy spread_image](document/image/daisy_spread_image_0.0.1.png)  
+
