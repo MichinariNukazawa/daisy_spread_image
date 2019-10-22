@@ -221,32 +221,6 @@ var template = [
 			menu_do_export_('png');
 		}
 	},
-	{
-		label: '&Close',
-		accelerator: 'CmdOrCtrl+W',
-		click: function () {
-			const doc = daisy.get_current_doc();
-			if(null === doc){
-				message_dialog(
-						'info', "Close",
-						"nothing opened document.");
-				return;
-			}
-
-			if(! Doc.is_on_save(doc)){
-				let res = confirm_dialog('Close', 'Close now?');
-				if(! res){
-					console.debug('cancel Close');
-					return;
-				}
-			}
-
-			const doc_id = doc_collection.get_doc_id_from_doc(doc);
-			daisy.remove_doc_id(doc_id);
-
-			console.log("Close %d", doc_id);
-		}
-	},
 	{type: 'separator'},
 	{
 		label: '&Quit',
