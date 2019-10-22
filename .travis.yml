@@ -11,7 +11,7 @@ addons:
     - make
     - librsvg2-bin
     - plantuml
-    - wine
+    #- wine
 
 # need spectron test
 services:
