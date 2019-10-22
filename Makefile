@@ -22,10 +22,6 @@ ci-test:
 test:
 	cd daisy_spread_image && npm run test test/$(ARG)
 
-.PHONY: dictionary
-dictionary:
-	cd daisy_spread_image && bash ./dictionary/esperanto/gen_dictionary.sh
-
 .PHONY: package package_desktop
 package: package_desktop
 

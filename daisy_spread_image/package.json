@@ -1,7 +1,7 @@
 {
   "name": "daisy_spread_image",
   "version": "0.0.1",
-  "description": "",
+  "description": "spread image in image generator",
   "main": "main.js",
   "dependencies": {
     "about-window": "^1.13.1",
@@ -15,6 +15,8 @@
   },
   "devDependencies": {
     "electron": "^6.0.12",
+    "electron-installer-debian": "^2.0.1",
+    "electron-packager": "^14.0.6",
     "intelli-espower-loader": "^1.0.1",
     "mocha": "^6.2.1",
     "power-assert": "^1.6.1",
@@ -22,7 +24,12 @@
   },
   "scripts": {
     "running": "electron .",
+    "debian_installer_debian": "electron-installer-debian --config ../release/installer_debian_amd64_config.json",
     "test": "mocha --require intelli-espower-loader",
+    "clean": "rm -rf ./release",
+    "pack:win": "electron-packager . --out=./release/win   --platform=win32  --arch=x64 --icon='./image/icon.ico'  --ignore='release' --ignore='object/' --ignore='obj/' --ignore='work/' --ignore='test/'",
+    "pack:osx": "rm -rf ./release/osx/     && electron-packager . --out=./release/osx   --platform=darwin --arch=x64 --icon='./image/icon.icns' --ignore='release/' --ignore='object/' --ignore='obj/' --ignore='work/' --ignore='test/'",
+    "pack:linux": "rm -rf ./release/linux/ && electron-packager . --out=./release/linux --platform=linux  --arch=x64 --icon='./image/icon.png'  --ignore='release/' --ignore='object/' --ignore='obj/' --ignore='work/' --ignore='test/'",
     "testtotest": "mocha test/mocha.js"
   },
   "author": "michinari.nukazawa@gmail.com",
