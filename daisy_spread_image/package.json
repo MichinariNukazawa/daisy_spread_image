@@ -1,6 +1,6 @@
 {
   "name": "daisy_spread_image",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "spread image in image generator",
   "main": "main.js",
   "dependencies": {
