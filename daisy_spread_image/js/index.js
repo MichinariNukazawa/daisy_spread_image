@@ -103,6 +103,7 @@ function get_property_from_ui(){
 
 	property.magickcircle_dirpath = get_curcle_dirpath();
 
+	property.canvas_scale_par		= document.getElementById('editor-canvas_scale_par').value;
 	property.document_width			= document.getElementById('editor-document_width').value;
 	property.document_height		= document.getElementById('editor-document_height').value;
 	property.randomseed_value		= document.getElementById('editor-randomseed_value').value;

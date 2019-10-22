@@ -216,7 +216,7 @@ var template = [
 		}
 	},
 	{
-		label: 'Export PNG (x4 size)',
+		label: 'Export PNG',
 		click: function () {
 			menu_do_export_('png');
 		}

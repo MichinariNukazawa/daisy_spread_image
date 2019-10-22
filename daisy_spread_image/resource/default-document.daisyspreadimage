@@ -6,13 +6,14 @@
 	"filetype": "daisy spread image",
 	"diagram": {
 		"property": {
-			"document_width": 600,
-			"document_height": 500,
+			"canvas_scale_par": 25,
+			"document_width": 2400,
+			"document_height": 1800,
 			"randomseed_value": 128,
-			"magickcircle_num": 5,
+			"magickcircle_num": 7,
 			"magickcircle_unique_picking": true,
 			"magickcircle_not_collision": true,
-			"magickcircle_imagescale": 0.1,
+			"magickcircle_imagescale": 0.4,
 			"magickcircle_randomsize": true,
 			"magickcircle_randomrotate": true
 		},

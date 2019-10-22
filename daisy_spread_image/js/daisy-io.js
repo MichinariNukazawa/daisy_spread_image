@@ -105,9 +105,9 @@ module.exports = class DaisyIO{
 
 		let svg_elem = draw.node;
 		// saveSvgAsPng(svg_elem, filepath, {scale: 3});
+		// @todo 上限サイズ(4800x3600~どこかまでの間)があるようでその場合0byteファイルが書き出される。
 		svgAsPngUri(svg_elem,
 			{
-				'scale': 4,
 				'backgroundColor': "#fff",
 			},
 			function(uri) {
@@ -117,6 +117,7 @@ module.exports = class DaisyIO{
 			}catch(err){
 				let err_ = {};
 				DaisyIO.set_err_(err_, "warning", "Export", err.message);
+				console.error(err_);
 				alart(err_);
 				return;
 			}

@@ -65,7 +65,6 @@ module.exports.RenderingHandle = class RenderingHandle{
 
 	clear()
 	{
-		console.debug("xxxxxxxxXXXXXX");
 		this.groups = [];
 		this.draw.clear();
 
@@ -99,13 +98,19 @@ module.exports.Renderer = class Renderer{
 	}
 
 	static rendering_diagram_(rendering_handle, diagram, focus, mouse_state, tool_kind){
-		rendering_handle.get_draw().size( diagram.property.document_width, diagram.property.document_height);
+		const canvas_scale = diagram.property.canvas_scale_par / 100;
+		rendering_handle.get_draw().size(
+			diagram.property.document_width  * canvas_scale,
+			diagram.property.document_height * canvas_scale
+		);
+
+		console.log(canvas_scale, diagram.property.canvas_scale_par);
 
 		const opt = {};
 		const svgstr_diagram = Renderer.generate_svgstr_from_diagram(diagram, opt);
 
 		rendering_handle.get_diagram_group().svg(svgstr_diagram);
-		//rendering_handle.get_diagram_group().scale(0.1, 0.1);
+		rendering_handle.get_root_group().scale(canvas_scale, canvas_scale, 0, 0);
 /*
 		Renderer.draw_focus_(rendering_handle, focus);
 
