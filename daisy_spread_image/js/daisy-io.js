@@ -47,7 +47,11 @@ module.exports = class DaisyIO{
 
 	static get_ext_from_filepath(filepath)
 	{
-		return filepath.match(/\.[a-zA-Z0-9]*$/)[0];
+		const m = filepath.match(/\.[a-zA-Z0-9]*$/);
+		if(null === m){
+			return '';
+		}
+		return m[0];
 	}
 
 	static write_export_diagram(filepath, diagram, errs_)
@@ -68,6 +72,10 @@ module.exports = class DaisyIO{
 				break;
 			case '.svg':
 				res = DaisyIO.write_export_svg_from_diagram_(filepath, diagram, errs_);
+				break;
+			case '':
+				DaisyIO.add_errs_(errs_, "warning", "Export", sprintf("file type (ext) not exist. :`%s`", filepath));
+				return false;
 				break;
 			default:
 				DaisyIO.add_errs_(errs_, "warning", "Export", sprintf("invalid file type. :`%s`", filepath));
