@@ -14,8 +14,8 @@ clean:
 
 .PHONY: test ci-test
 ci-test:
-	#make test
-	make package
+	make test
+	#make package
 
 test:
 	cd daisy_spread_image && npm run test test/$(ARG)
