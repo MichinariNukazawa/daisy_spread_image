@@ -81,17 +81,15 @@ module.exports = class DaisyIO{
 	{
 		let err_ = {};
 
-if(process.platform === 'win32'){
-	/**
-	for windows only issue dirty fix.
-	png export is not synced.
-	https://github.com/domenic/svg2png/issues/113
-	*/
-let svgAsPngUri = require('save-svg-as-png').svgAsPngUri;
-let dataUriToBuffer = require('data-uri-to-buffer');
+		/**
+		png export is not synced.
+		https://github.com/domenic/svg2png/issues/113
+		*/
+		let svgAsPngUri = require('save-svg-as-png').svgAsPngUri;
+		let dataUriToBuffer = require('data-uri-to-buffer');
 
 		const opt = {'scale':1};
-		let draw = Renderer.generate_svgstr_from_diagram(diagram, opt);
+		let draw = Renderer.generate_svgjsdraw_from_diagram(diagram, opt);
 		if(null === draw){
 			DaisyIO.add_errs_(errs_, err_.level, "Export", err_.message);
 			return false;
@@ -117,38 +115,6 @@ let dataUriToBuffer = require('data-uri-to-buffer');
 		});
 
 		return true;
-}else{
-		const opt = {
-			'scale': 4,
-			'background_color': "#fff",
-		};
-		const strdata = DaisyIO.get_svg_string_from_diagram_(diagram, opt, err_);
-		if(null === strdata){
-			console.error(err_);
-			DaisyIO.add_errs_(errs_, err_.level, "Export", err_.message);
-			return false;
-		}
-
-		let output;
-		const svg2png = require("svg2png");
-		try{
-			output = svg2png.sync(strdata);
-		}catch(err){
-			console.debug(err);
-			DaisyIO.add_errs_(errs_, "error", "Export", sprintf("internal svg2png error. :`%s`", err.message));
-			return false;
-		}
-
-		try{
-			fs.writeFileSync(filepath, output);
-		}catch(err){
-			console.debug(err);
-			DaisyIO.add_errs_(errs_, "warning", "Export", sprintf("writeFile error. :`%s`", filepath));
-			return false;
-		}
-
-		return true;
-}
 	}
 
 	static write_export_svg_from_diagram_(filepath, diagram, errs_)
