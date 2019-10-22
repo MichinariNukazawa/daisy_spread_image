@@ -8,6 +8,7 @@ let SVG = require('svg.js');
 const Renderer = require('./js/renderer').Renderer;
 const RenderingHandle = require('./js/renderer').RenderingHandle;
 const DaisyIO = require('./js/daisy-io');
+let ad = new Ad();
 
 let rendering_handle = null;
 
@@ -288,5 +289,7 @@ window.addEventListener("load", function(){
 		rerendering();
 	};
 	add_event_listener_from_property(get_doc().diagram.property, callback_editor_change_);
+
+	ad.start();
 });
 
