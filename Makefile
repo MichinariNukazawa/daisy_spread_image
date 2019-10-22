@@ -14,6 +14,7 @@ clean:
 
 .PHONY: test ci-test
 ci-test:
+	cd daisy_spread_image && npm install && npm audit fix
 	make test
 	#make package
 
