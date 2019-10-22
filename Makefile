@@ -14,10 +14,8 @@ clean:
 
 .PHONY: test ci-test
 ci-test:
-	cd daisy_spread_image && npm install
-	rm daisy_spread_image/test/timeout.js # CI timeoutテストしない
-	make test
-	#make package
+	#make test
+	make package
 
 test:
 	cd daisy_spread_image && npm run test test/$(ARG)
