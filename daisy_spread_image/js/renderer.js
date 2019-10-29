@@ -117,7 +117,7 @@ module.exports.Renderer = class Renderer{
 			'scale': canvas_scale,
 			'margin': 2,
 		};
-		console.log(canvas_info, diagram.property.canvas_scale_par);
+		console.debug(canvas_info, diagram.property.canvas_scale_par);
 
 		Renderer.rendering_canvas_(rendering_handle, svgstr_diagram, canvas_info, focus, mouse_state, tool_kind);
 	}
@@ -138,7 +138,7 @@ module.exports.Renderer = class Renderer{
 			'scale': scale,
 			'margin': 2,
 		};
-		console.log('thumb info', canvas_info);
+		console.debug('thumb info', canvas_info);
 		const svgstr_diagram = rendering_handle_src.thumbnail_info.svgstr_diagram;
 		Renderer.rendering_canvas_(rendering_handle, svgstr_diagram, canvas_info, null, null, null);
 	}
@@ -205,7 +205,6 @@ module.exports.Renderer = class Renderer{
 				diagram_group_.scale(elem.scale, elem.scale)
 				diagram_group_.skew(elem.skew.x, elem.skew.y)
 				;
-				console.log("elem", elem.skew.x, elem.skew.y);
 		diagram_group_.svg(circleimage_svg)
 				.rotate(elem.rotate_degree, 1000 / 2, 1000 / 2)
 				.attr({

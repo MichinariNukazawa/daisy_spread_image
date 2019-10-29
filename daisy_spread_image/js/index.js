@@ -39,7 +39,6 @@ class Random {
 		const v = Math.abs(this.next());
 		const n = max - min;
 		const r = (v % n) + min;
-		//console.log("Random.range:", min,max, v, n, r);
 		return r;
 	}
 }
@@ -302,7 +301,7 @@ window.addEventListener("load", function(){
 	}, false);
 
 	let callback_editor_change_ = function(e){
-		console.log(e.target);
+		console.debug(e.target);
 
 		rerendering();
 	};
