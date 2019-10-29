@@ -15,7 +15,9 @@
 			"magickcircle_not_collision": true,
 			"magickcircle_imagescale": 0.4,
 			"magickcircle_randomsize": true,
-			"magickcircle_randomrotate": true
+			"magickcircle_randomrotate": true,
+			"magickcircle_randomskew": false,
+			"magickcircle_skewdegree": 20
 		},
 		"diagram_elements": [
 		]

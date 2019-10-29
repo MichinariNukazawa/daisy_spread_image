@@ -114,6 +114,8 @@ function get_property_from_ui(){
 	property.magickcircle_imagescale	= document.getElementById('editor-magickcircle_imagescale').value;
 	property.magickcircle_randomsize	= document.getElementById('editor-magickcircle_randomsize').checked;
 	property.magickcircle_randomrotate	= document.getElementById('editor-magickcircle_randomrotate').checked;
+	property.magickcircle_randomskew	= document.getElementById('editor-magickcircle_randomskew').checked;
+	property.magickcircle_skewdegree	= document.getElementById('editor-magickcircle_skewdegree').value;
 
 	return property;
 }
@@ -228,13 +230,28 @@ function set_ui_generate_diagram(diagram){
 			"y": position.y,
 			"scale": scale,
 			"rotate_degree": rotate_degree,
+			"skew": { 'x': 0, 'y': 0,},
 			"subfilepath": circle_subfilepath
 		};
 		diagram.diagram_elements.push(elem);
 	}
 
+	for(let i = 0; i < diagram.diagram_elements.length; i++){
+		let elem = diagram.diagram_elements[i];
+
+		if(diagram.property.magickcircle_randomskew){
+			const skew_v = diagram.property.magickcircle_skewdegree; //20;
+			const skew = {
+				'x': random.range(-100, 100) / 100.0 * skew_v,
+				'y': random.range(-100, 100) / 100.0 * skew_v,
+			};
+
+			elem.skew = skew;
+		}
+	}
+
 	Renderer.rerendering(rendering_handle, diagram, null, null, null);
-	Renderer.rendering_thumbnail(rendering_handle_thumbnail, rendering_handle, {'x': 300,'y': 200});
+	Renderer.rendering_thumbnail(rendering_handle_thumbnail, rendering_handle, {'x': 300,'y': 150});
 }
 
 function rerendering(){

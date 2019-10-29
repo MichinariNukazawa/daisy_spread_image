@@ -203,6 +203,9 @@ module.exports.Renderer = class Renderer{
 		let diagram_group_ = circle_group.group().addClass('dd__circle_group__AA');
 				diagram_group_.move(elem.x, elem.y)
 				diagram_group_.scale(elem.scale, elem.scale)
+				diagram_group_.skew(elem.skew.x, elem.skew.y)
+				;
+				console.log("elem", elem.skew.x, elem.skew.y);
 		diagram_group_.svg(circleimage_svg)
 				.rotate(elem.rotate_degree, 1000 / 2, 1000 / 2)
 				.attr({
