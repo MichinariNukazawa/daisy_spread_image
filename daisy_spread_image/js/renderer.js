@@ -94,15 +94,26 @@ module.exports.Renderer = class Renderer{
 			return null;
 		}
 
+		const diagram_size = {
+			'x': diagram.property.document_width ,
+			'y': diagram.property.document_height,
+		};
+
 		const opt = {};
 		const svgstr_diagram = Renderer.generate_svgstr_from_diagram(diagram, opt);
+		rendering_handle.thumbnail_info = {
+			'svgstr_diagram': svgstr_diagram,
+			'diagram_size': diagram_size,
+		};
+
 
 		const canvas_scale = diagram.property.canvas_scale_par / 100;
 		const canvas_info = {
-			'size': {
+			'canvas_size': {
 				'x': diagram.property.document_width  * canvas_scale,
 				'y': diagram.property.document_height * canvas_scale,
 			},
+			'diagram_size': diagram_size,
 			'scale': canvas_scale,
 			'margin': 2,
 		};
@@ -111,14 +122,47 @@ module.exports.Renderer = class Renderer{
 		Renderer.rendering_canvas_(rendering_handle, svgstr_diagram, canvas_info, focus, mouse_state, tool_kind);
 	}
 
+	static rendering_thumbnail(rendering_handle, rendering_handle_src, thumbnail_size)
+	{
+		rendering_handle.clear();
+
+		const scale_x = thumbnail_size.x / rendering_handle_src.thumbnail_info.diagram_size.x;
+		const scale_y = thumbnail_size.y / rendering_handle_src.thumbnail_info.diagram_size.y;
+		const scale = Math.min(scale_x, scale_y);
+		const canvas_info = {
+			'canvas_size': {
+				'x': thumbnail_size.x,
+				'y': thumbnail_size.y,
+			},
+			'diagram_size': rendering_handle_src.thumbnail_info.diagram_size,
+			'scale': scale,
+			'margin': 2,
+		};
+		console.log('thumb info', canvas_info);
+		const svgstr_diagram = rendering_handle_src.thumbnail_info.svgstr_diagram;
+		Renderer.rendering_canvas_(rendering_handle, svgstr_diagram, canvas_info, null, null, null);
+	}
+
 	static rendering_canvas_(rendering_handle, svgstr_diagram, canvas_info, focus, mouse_state, tool_kind){
 		rendering_handle.get_draw().size(
-			canvas_info.size.x + (canvas_info.margin * 2),
-			canvas_info.size.y + (canvas_info.margin * 2),
+			canvas_info.canvas_size.x + (canvas_info.margin * 2),
+			canvas_info.canvas_size.y + (canvas_info.margin * 2),
 		);
 
+		// diagramの描画サイズ
+		const diagram_rendering_size = {
+			'x': canvas_info.diagram_size.x * canvas_info.scale,
+			'y': canvas_info.diagram_size.y * canvas_info.scale,
+		};
+
+		// canvas内でdiagramをセンタリング表示する際の位置(左上座標)
+		const diagram_position = {
+			'x': canvas_info.margin + ((canvas_info.canvas_size.x - diagram_rendering_size.x) / 2),
+			'y': canvas_info.margin + ((canvas_info.canvas_size.y - diagram_rendering_size.y) / 2),
+		};
+
 		rendering_handle.get_diagram_group().svg(svgstr_diagram);
-		rendering_handle.get_diagram_group().move(canvas_info.margin, canvas_info.margin);
+		rendering_handle.get_diagram_group().move(diagram_position.x, diagram_position.y);
 		rendering_handle.get_diagram_group().scale(canvas_info.scale, canvas_info.scale, 0, 0);
 /*
 		Renderer.draw_focus_(rendering_handle, focus);
@@ -136,10 +180,10 @@ module.exports.Renderer = class Renderer{
 			}
 
 			let rect = {
-				'x': canvas_info.margin,
-				'y': canvas_info.margin,
-				'width':	canvas_info.size.x,
-				'height':	canvas_info.size.y,
+				'x': diagram_position.x,
+				'y': diagram_position.y,
+				'width':	diagram_rendering_size.x,
+				'height':	diagram_rendering_size.y,
 			};
 			background_group.rect(rect.width, rect.height)
 				.move(rect.x, rect.y)

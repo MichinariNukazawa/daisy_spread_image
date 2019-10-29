@@ -11,6 +11,7 @@ const DaisyIO = require('./js/daisy-io');
 let ad = new Ad();
 
 let rendering_handle = null;
+let rendering_handle_thumbnail = null;
 
 
 
@@ -233,7 +234,7 @@ function set_ui_generate_diagram(diagram){
 	}
 
 	Renderer.rerendering(rendering_handle, diagram, null, null, null);
-
+	Renderer.rendering_thumbnail(rendering_handle_thumbnail, rendering_handle, {'x': 300,'y': 200});
 }
 
 function rerendering(){
@@ -269,10 +270,9 @@ window.addEventListener("load", function(){
 	set_ui_from_property(get_doc().diagram.property);
 
 	rendering_handle = new RenderingHandle('canvas');
+	rendering_handle_thumbnail = new RenderingHandle('thumbnail-canvas');
 
 	set_ui_generate_diagram(get_doc().diagram);
-
-	document.getElementById('thumbnail-frame').style.display = "none";
 
 	document.getElementById('apply-button').addEventListener('click', function(e){
 		rerendering();
