@@ -90,27 +90,34 @@ module.exports.Renderer = class Renderer{
 		diagram.width = diagram.property.document_width;
 		diagram.height = diagram.property.document_height;
 
-		rendering_handle.clear();
-
-		if(null !== diagram){
-			Renderer.rendering_diagram_(rendering_handle, diagram, focus, mouse_state, tool_kind);
+		if(null === diagram){
+			return null;
 		}
-	}
-
-	static rendering_diagram_(rendering_handle, diagram, focus, mouse_state, tool_kind){
-		const canvas_scale = diagram.property.canvas_scale_par / 100;
-		rendering_handle.get_draw().size(
-			diagram.property.document_width  * canvas_scale,
-			diagram.property.document_height * canvas_scale
-		);
-
-		console.log(canvas_scale, diagram.property.canvas_scale_par);
 
 		const opt = {};
 		const svgstr_diagram = Renderer.generate_svgstr_from_diagram(diagram, opt);
 
+		const canvas_scale = diagram.property.canvas_scale_par / 100;
+		const canvas_info = {
+			'size': {
+				'x': diagram.property.document_width  * canvas_scale,
+				'y': diagram.property.document_height * canvas_scale,
+			},
+			'scale': canvas_scale,
+		};
+		console.log(canvas_info, diagram.property.canvas_scale_par);
+
+		Renderer.rendering_canvas_(rendering_handle, svgstr_diagram, canvas_info, focus, mouse_state, tool_kind);
+	}
+
+	static rendering_canvas_(rendering_handle, svgstr_diagram, canvas_info, focus, mouse_state, tool_kind){
+		rendering_handle.get_draw().size(
+			canvas_info.size.x,
+			canvas_info.size.y,
+		);
+
 		rendering_handle.get_diagram_group().svg(svgstr_diagram);
-		rendering_handle.get_root_group().scale(canvas_scale, canvas_scale, 0, 0);
+		rendering_handle.get_diagram_group().scale(canvas_info.scale, canvas_info.scale, 0, 0);
 /*
 		Renderer.draw_focus_(rendering_handle, focus);
 
@@ -122,7 +129,7 @@ module.exports.Renderer = class Renderer{
 		{
 			let background_group = rendering_handle.get_background_group();
 			if(null === background_group){
-				console.error('');
+				console.error('bug');
 				return;
 			}
 
@@ -130,8 +137,8 @@ module.exports.Renderer = class Renderer{
 			let rect = {
 				'x': margin,
 				'y': margin,
-				'width': diagram.width - (margin * 2),
-				'height': diagram.height - (margin * 2),
+				'width':	canvas_info.size.x - (margin * 2),
+				'height':	canvas_info.size.y - (margin * 2),
 			};
 			background_group.rect(rect.width, rect.height)
 				.move(rect.x, rect.y)
