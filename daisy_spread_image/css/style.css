@@ -81,6 +81,7 @@ table th{
 	width: 320px;
 	font-size: 120%;
 	background-color: rgb(40, 40, 40);
+	overflow:	visible auto;
 }
 
 #canvas-header{
