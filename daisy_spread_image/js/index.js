@@ -290,10 +290,6 @@ window.addEventListener("load", function(){
 
 	set_ui_generate_diagram(get_doc().diagram);
 
-	document.getElementById('apply-button').addEventListener('click', function(e){
-		rerendering();
-	}, false);
-
 	document.getElementById('generate-randomseed').addEventListener('click', function(e){
 		document.getElementById('editor-randomseed_value').value = getRandomInt(0, 65532);
 
