@@ -104,6 +104,7 @@ module.exports.Renderer = class Renderer{
 				'y': diagram.property.document_height * canvas_scale,
 			},
 			'scale': canvas_scale,
+			'margin': 2,
 		};
 		console.log(canvas_info, diagram.property.canvas_scale_par);
 
@@ -112,11 +113,12 @@ module.exports.Renderer = class Renderer{
 
 	static rendering_canvas_(rendering_handle, svgstr_diagram, canvas_info, focus, mouse_state, tool_kind){
 		rendering_handle.get_draw().size(
-			canvas_info.size.x,
-			canvas_info.size.y,
+			canvas_info.size.x + (canvas_info.margin * 2),
+			canvas_info.size.y + (canvas_info.margin * 2),
 		);
 
 		rendering_handle.get_diagram_group().svg(svgstr_diagram);
+		rendering_handle.get_diagram_group().move(canvas_info.margin, canvas_info.margin);
 		rendering_handle.get_diagram_group().scale(canvas_info.scale, canvas_info.scale, 0, 0);
 /*
 		Renderer.draw_focus_(rendering_handle, focus);
@@ -133,12 +135,11 @@ module.exports.Renderer = class Renderer{
 				return;
 			}
 
-			const margin = 2;
 			let rect = {
-				'x': margin,
-				'y': margin,
-				'width':	canvas_info.size.x - (margin * 2),
-				'height':	canvas_info.size.y - (margin * 2),
+				'x': canvas_info.margin,
+				'y': canvas_info.margin,
+				'width':	canvas_info.size.x,
+				'height':	canvas_info.size.y,
 			};
 			background_group.rect(rect.width, rect.height)
 				.move(rect.x, rect.y)
