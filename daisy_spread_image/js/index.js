@@ -8,6 +8,7 @@ let SVG = require('svg.js');
 const Renderer = require('./js/renderer').Renderer;
 const RenderingHandle = require('./js/renderer').RenderingHandle;
 const DaisyIO = require('./js/daisy-io');
+const ExternalBrowser = require('./js/external_browser');
 let ad = new Ad();
 
 let rendering_handle = null;
@@ -47,6 +48,46 @@ class Point{
 	static between_s(p0, p1){
 		return Math.abs(p0.x - p1.x) + Math.abs(p0.y - p1.y);
 	}
+}
+
+
+
+function isExistDirSync(file)
+{
+	try{
+		const stat = fs.statSync(file);
+		return stat.isDirectory();
+	}catch(err){
+		return false;
+	}
+}
+
+function opendir_dialog(default_dirpath)
+{
+	const {app} = require('electron').remote;
+	const {dialog} = require('electron').remote;
+	const fs = require('fs');
+
+	let open_dirpath = app.getPath('home');
+	if(isExistDirSync(default_dirpath)){
+		open_dirpath = default_dirpath;
+	}
+	console.debug('open_dirpath', open_dirpath);
+
+	let filepath = dialog.showOpenDialogSync(
+			remote.getCurrentWindow(),
+			{
+				title: 'Open',
+				defaultPath: open_dirpath,
+				properties: ['openDirectory'],
+			});
+
+	if(typeof filepath === "undefined"){
+		return '';
+	}
+
+	filepath = filepath[0];
+	return filepath;
 }
 
 
@@ -101,13 +142,15 @@ function set_ui_from_property(property){
 function get_property_from_ui(){
 	let property = {};
 
-	property.magickcircle_dirpath = get_curcle_dirpath();
+	property.magickcircle_dirpath = get_circle_dirpath();
 
 	property.canvas_scale_par		= document.getElementById('editor-canvas_scale_par').value;
 	property.document_width			= document.getElementById('editor-document_width').value;
 	property.document_height		= document.getElementById('editor-document_height').value;
 	property.randomseed_value		= document.getElementById('editor-randomseed_value').value;
 	property.magickcircle_num		= document.getElementById('editor-magickcircle_num').value;
+	property.magickcircle_source_kind	= document.getElementById('editor-magickcircle_source_kind').value;
+	property.magickcircle_source_directory_path	= document.getElementById('editor-magickcircle_source_directory_path').value;
 	property.magickcircle_unique_picking	= document.getElementById('editor-magickcircle_unique_picking').checked;
 	property.magickcircle_not_collision	= document.getElementById('editor-magickcircle_not_collision').checked;
 	property.magickcircle_imagescale	= document.getElementById('editor-magickcircle_imagescale').value;
@@ -119,22 +162,15 @@ function get_property_from_ui(){
 	return property;
 }
 
-function read_curcle_filepaths_from_dirpath(dirpath){
+function read_circle_filepaths_from_dirpath(dirpath){
 	let a = fs.readdirSync(dirpath);
 	console.debug(a);
 	return a.filter(name => /.svg$/.test(name));
 }
 
-function get_curcle_dirpath(){
+function get_circle_dirpath(){
 	const fileex = require('./js/fileex');
 	return fileex.join(__dirname, "resource/circle/");
-}
-
-function read_curcle_filepaths(){
-	const fileex = require('./js/fileex');
-
-	const dirpath = get_curcle_dirpath();
-	return read_curcle_filepaths_from_dirpath(dirpath);
 }
 
 function generate_position_not_collision(random, position_range, elem_scale, diagram_elements){
@@ -165,12 +201,24 @@ function generate_position_not_collision(random, position_range, elem_scale, dia
 function set_ui_generate_diagram(diagram){
 	const fileex = require('./js/fileex');
 	const property = diagram.property;
+	console.log("prop:", property);
 
-	let curcle_filepaths = read_curcle_filepaths();
-	document.getElementById('magickcircle_source_num').textContent = sprintf("%3d", curcle_filepaths.length);
-
-	const dirpath = get_curcle_dirpath();
+	let dirpath = get_circle_dirpath();
+	if('BuiltIn' !== property.magickcircle_source_kind){
+		if(! isExistDirSync(property.magickcircle_source_directory_path)){
+			// use faullback to BuiltIn
+			console.log('use faullback to BuiltIn', property.magickcircle_source_directory_path);
+			if('' !== property.magickcircle_source_directory_path){
+				alert(sprintf("directory not exist:¥n`%s`", property.magickcircle_source_directory_path));
+			}
+		}else{
+			dirpath = property.magickcircle_source_directory_path;
+		}
+	}
 	property.magickcircle_dirpath = dirpath;
+
+	let circle_filepaths = read_circle_filepaths_from_dirpath(dirpath);
+	document.getElementById('magickcircle_source_num').textContent = sprintf("%3d", circle_filepaths.length);
 
 	let random = new Random(parseInt(diagram.property.randomseed_value, 10));
 
@@ -184,9 +232,9 @@ function set_ui_generate_diagram(diagram){
 
 	diagram.diagram_elements = [];
 	for(let i = 0; i < property.magickcircle_num; i++){
-		const ix = random.range(0, curcle_filepaths.length);
+		const ix = random.range(0, circle_filepaths.length);
 
-		if(0 === curcle_filepaths.length){
+		if(0 === circle_filepaths.length){
 			alert("empty magickcircle (or full unique)");
 			break;
 		}
@@ -203,9 +251,9 @@ function set_ui_generate_diagram(diagram){
 		scale = scale / 10.0;
 		scale *= diagram.property.magickcircle_imagescale;
 
-		let circle_subfilepath = curcle_filepaths[ix];
+		let circle_subfilepath = circle_filepaths[ix];
 		if(diagram.property.magickcircle_unique_picking){
-			curcle_filepaths.splice(ix, 1);
+			circle_filepaths.splice(ix, 1);
 		}
 		console.debug(i, circle_subfilepath);
 
@@ -290,12 +338,40 @@ window.addEventListener("load", function(){
 
 	set_ui_generate_diagram(get_doc().diagram);
 
+	// ** eventListener
 	document.getElementById('generate-randomseed').addEventListener('click', function(e){
 		document.getElementById('editor-randomseed_value').value = getRandomInt(0, 65532);
 
 		rerendering();
 	}, false);
+	document.getElementById('editor-magickcircle_source_kind').addEventListener('change', function(e){
+		console.log("kind:", e.target.value);
+		let elem_pathinput = document.getElementById('editor-magickcircle_source_directory_path');
+		let elem_pathbutton = document.getElementById('opendir-magickcircle_source_directory_path');
+		switch(e.target.value){
+			case "BuiltIn":
+				elem_pathinput.disabled = true;
+				elem_pathbutton.disabled = true;
+				break;
+			default:
+				elem_pathinput.disabled = false;
+				elem_pathbutton.disabled = false;
+		}
+	}, false);
+	document.getElementById('opendir-magickcircle_source_directory_path').addEventListener('click', function(e){
+		let elem_dirpath = document.getElementById('editor-magickcircle_source_directory_path');
+		let dirpath = elem_dirpath.value;
+		dirpath = opendir_dialog(dirpath);
+		console.log("dirpath", dirpath);
+		elem_dirpath.value = dirpath;
 
+		rerendering();
+	}, false);
+	document.getElementById('link-get-more-magickcircle').addEventListener('click', function(e){
+		ExternalBrowser.open('https://daisy-bell.booth.pm/items/81865');
+	}, false);
+
+	// **
 	let callback_editor_change_ = function(e){
 		console.debug(e.target);
 

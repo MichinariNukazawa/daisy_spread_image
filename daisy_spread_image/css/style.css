@@ -23,7 +23,7 @@ div{
 	padding: 0px;
 }
 
-input{
+input, select{
 	font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
 	vertical-align: bottom;
 	font-size: 0.8em;
@@ -41,6 +41,11 @@ input[type="text"]{
 
 input[type="checkbox"][disabled] + span{
 	color: #707070;
+}
+
+input:disabled, button:disabled, select:disabled{
+	background: rgba(128, 128, 128, 0.8);
+	color: rgba(64, 64, 64, 0.5);
 }
 
 button{
@@ -137,8 +142,13 @@ table th{
 	padding: 5px;
 }
 
-#apply-button{
-	width:100%;
-	font-size: 140%;
+#editor-magickcircle_source_directory_path{
+	width: 70%;
+}
+
+#link-get-more-magickcircle{
+	width: 100%;
+	color: rgba(80, 200, 256, 0.92);
+	cursor: default;
 }
 

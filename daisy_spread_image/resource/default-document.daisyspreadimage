@@ -11,6 +11,8 @@
 			"document_height": 1800,
 			"randomseed_value": 128,
 			"magickcircle_num": 7,
+			"magickcircle_source_kind": "BuiltIn",
+			"magickcircle_source_directory_path": "",
 			"magickcircle_unique_picking": true,
 			"magickcircle_not_collision": true,
 			"magickcircle_imagescale": 0.4,
