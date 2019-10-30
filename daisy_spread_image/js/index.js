@@ -5,6 +5,7 @@ const path = require('path');
 const sprintf = require('sprintf-js').sprintf;
 let SVG = require('svg.js');
 //const {app} = require('electron').remote;
+const Preference = require('./js/preference');
 const Renderer = require('./js/renderer').Renderer;
 const RenderingHandle = require('./js/renderer').RenderingHandle;
 const DaisyIO = require('./js/daisy-io');
@@ -213,6 +214,7 @@ function set_ui_generate_diagram(diagram){
 			}
 		}else{
 			dirpath = property.magickcircle_source_directory_path;
+			Preference.save_preference_of_keypath('magickcircle_source_directory_path', dirpath);
 		}
 	}
 	property.magickcircle_dirpath = dirpath;
@@ -325,7 +327,14 @@ function get_doc(){
 window.addEventListener("load", function(){
 	console.debug("wakeup");
 
-	// doc init
+	// ** preference
+	try{
+		Preference.init();
+	}catch(err){
+		message_dialog('error', 'user preference error', "user preference load error:\n" + err.message);
+	}
+
+	// ** doc init
 	const fileex = require('./js/fileex');
 	const filepathDefaultDoc = fileex.join(__dirname, "resource/default-document.daisyspreadimage");
 	global_doc = fileex.read_json(filepathDefaultDoc);
@@ -337,6 +346,14 @@ window.addEventListener("load", function(){
 	rendering_handle_thumbnail = new RenderingHandle('thumbnail-canvas');
 
 	set_ui_generate_diagram(get_doc().diagram);
+
+	{
+		// ** preference overwrite
+		const pref = Preference.get_preference();
+		//console.log("pref", pref);
+
+		document.getElementById('editor-magickcircle_source_directory_path').value = pref.magickcircle_source_directory_path;
+	}
 
 	// ** eventListener
 	document.getElementById('generate-randomseed').addEventListener('click', function(e){
