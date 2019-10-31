@@ -357,7 +357,7 @@ window.addEventListener("load", function(){
 
 	// ** eventListener
 	document.getElementById('generate-randomseed').addEventListener('click', function(e){
-		document.getElementById('editor-randomseed_value').value = getRandomInt(0, 65532);
+		document.getElementById('editor-randomseed_value').value = getRandomInt(0, 4294967295);
 
 		rerendering();
 	}, false);

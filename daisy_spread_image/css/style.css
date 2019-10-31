@@ -152,3 +152,8 @@ table th{
 	cursor: default;
 }
 
+#editor-randomseed_value{
+	text-align: right;
+	width: 110px;
+}
+
