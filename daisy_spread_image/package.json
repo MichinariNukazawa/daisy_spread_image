@@ -4,21 +4,21 @@
   "description": "spread image in image generator",
   "main": "main.js",
   "dependencies": {
-    "about-window": "^1.13.2",
-    "data-uri-to-buffer": "^3.0.0",
+    "about-window": "^1.13.4",
+    "data-uri-to-buffer": "^3.0.1",
     "save-svg-as-png": "^1.4.17",
     "sprintf-js": "^1.1.2",
     "svg.js": "^2.7.1",
-    "xml-formatter": "^1.2.0"
+    "xml-formatter": "^2.4.0"
   },
   "devDependencies": {
-    "electron": "^8.0.1",
-    "electron-installer-debian": "^3.0.0",
-    "electron-packager": "^14.2.1",
+    "electron": "^11.1.1",
+    "electron-installer-debian": "^3.1.0",
+    "electron-packager": "^15.2.0",
     "intelli-espower-loader": "^1.0.1",
-    "mocha": "^7.0.1",
+    "mocha": "^8.2.1",
     "power-assert": "^1.6.1",
-    "spectron": "^10.0.1"
+    "spectron": "^13.0.0"
   },
   "scripts": {
     "running": "electron .",

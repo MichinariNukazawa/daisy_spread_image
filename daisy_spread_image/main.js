@@ -23,6 +23,7 @@ function createWindow () {
 		width: 1200,
 		height: 700,
 		webPreferences: {
+			enableRemoteModule: true,
 			nodeIntegration: true
 		},
 		icon: path.join(__dirname, 'image/icon.png')
